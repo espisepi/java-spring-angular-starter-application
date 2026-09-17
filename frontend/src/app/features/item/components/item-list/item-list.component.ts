@@ -21,6 +21,8 @@ export class ItemListComponent {
 
   loading: Signal<boolean> = this.itemService.getLoadingSignal();
 
+  error: Signal<Error | null> = this.itemService.getErrorSignal();
+
   constructor() { }
 
 }

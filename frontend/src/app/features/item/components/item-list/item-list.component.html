@@ -1,7 +1,11 @@
 <div style="height: 100vh; background-color: #373737; color: #a3a3a3;">
+
   <h1>Welcome to the Item List Component</h1>
+
   <p>This component displays a list of items fetched from the backend.</p>
+
   <h2>Item List</h2>
+
   <table border="1">
     <tr>
       <th>ID</th>
@@ -14,10 +18,17 @@
     </tr>
     }
   </table>
+
   @if(loading()) {
   <p>Loading items...</p>
   } @else {
   <p>Items loaded successfully.</p>
+  }
+
+  @if(error()) {
+  <p>Error loading items: {{ error()?.message }}</p>
+  } @else {
+  <p>No errors occurred while loading items.</p>
   }
 
 </div>
