@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { catchError, finalize, Observable, of } from 'rxjs';
+import { finalize, Observable, of, shareReplay, tap } from 'rxjs';
 import { Item } from '../models/Item';
 
 @Injectable({ providedIn: 'root' })
@@ -10,24 +10,53 @@ export class ItemService {
 
   private readonly itemsEndpoint = 'http://localhost:8080/api/items';
 
+  private readonly itemsState = signal<Item[]>([]);
   private readonly loadingState = signal(false);
   private readonly errorMessageState = signal<string | null>(null);
+  private hasLoaded = false;
+  private itemsRequest$: Observable<Item[]> | null = null;
 
+  readonly items = this.itemsState.asReadonly();
   readonly isLoading = this.loadingState.asReadonly();
   readonly errorMessage = this.errorMessageState.asReadonly();
 
-  getItems(): Observable<Item[]> {
+  loadItems(forceReload = false): void {
+    this.loadItems$(forceReload).subscribe({
+      error: () => undefined
+    });
+  }
+
+  loadItems$(forceReload = false): Observable<Item[]> {
+    if (!forceReload && this.hasLoaded) {
+      return of(this.items());
+    }
+
+    if (this.itemsRequest$) {
+      return this.itemsRequest$;
+    }
+
     this.loadingState.set(true);
     this.errorMessageState.set(null);
 
-    return this.http.get<Item[]>(this.itemsEndpoint).pipe(
-      catchError((error: unknown) => {
-        console.error('Failed to load items', error);
-        this.errorMessageState.set(this.getErrorMessage(error));
-        return of([]);
+    this.itemsRequest$ = this.http.get<Item[]>(this.itemsEndpoint).pipe(
+      tap({
+        next: items => {
+          this.itemsState.set(items);
+          this.hasLoaded = true;
+        },
+        error: (error: unknown) => {
+          console.error('Failed to load items', error);
+          this.errorMessageState.set(this.getErrorMessage(error));
+        }
       }),
-      finalize(() => this.loadingState.set(false))
+      finalize(() => {
+        this.loadingState.set(false);
+        this.itemsRequest$ = null;
+      }),
+      shareReplay({ bufferSize: 1, refCount: true })
     );
+
+    return this.itemsRequest$;
   }
 
   private getErrorMessage(error: unknown): string {

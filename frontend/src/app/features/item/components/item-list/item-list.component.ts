@@ -3,8 +3,6 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ItemService } from '../../services/item.service';
 import { HttpClientModule } from '@angular/common/http';
-import { Item } from '../../models/Item';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-item-list',
@@ -16,8 +14,11 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class ItemListComponent {
   private readonly itemService = inject(ItemService);
 
-  readonly items = toSignal(this.itemService.getItems(), { initialValue: [] as Item[] });
+  readonly items = this.itemService.items;
   readonly isLoading = this.itemService.isLoading;
   readonly errorMessage = this.itemService.errorMessage;
 
+  constructor() {
+    this.itemService.loadItems();
+  }
 }
