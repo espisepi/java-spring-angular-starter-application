@@ -5,8 +5,11 @@ import { Item } from '../models/Item';
 
 @Injectable({ providedIn: 'root' })
 export class ItemService {
+
   private readonly http = inject(HttpClient);
+
   private readonly itemsEndpoint = 'http://localhost:8080/api/items';
+
   private readonly loadingState = signal(false);
   private readonly errorMessageState = signal<string | null>(null);
 
