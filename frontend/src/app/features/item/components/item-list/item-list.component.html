@@ -19,10 +19,14 @@
     }
   </table>
 
-  @if(isLoading()) {
+  @if(isLoading() && !errorMessage()) {
   <p>Loading items...</p>
-  } @else {
+  }
+  @else if(!isLoading() && !errorMessage()) {
   <p>Items loaded successfully.</p>
+  }
+  @else {
+  <p>Items loaded with errors.</p>
   }
 
   @if(errorMessage()) {
