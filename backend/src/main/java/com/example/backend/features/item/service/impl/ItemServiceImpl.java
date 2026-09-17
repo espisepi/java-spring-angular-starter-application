@@ -1,13 +1,14 @@
-package com.example.backend.item.service.impl;
+package com.example.backend.features.item.service.impl;
 
-import com.example.backend.item.repository.ItemRepository;
-import com.example.backend.item.service.ItemService;
-import com.example.backend.item.model.Item;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.example.backend.features.item.model.Item;
+import com.example.backend.features.item.repository.ItemRepository;
+import com.example.backend.features.item.service.ItemService;
 
 @Service
 @Transactional

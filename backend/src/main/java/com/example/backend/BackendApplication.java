@@ -1,12 +1,12 @@
 package com.example.backend;
 
-import com.example.backend.item.model.Item;
-import com.example.backend.item.repository.ItemRepository;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import com.example.backend.features.item.model.Item;
+import com.example.backend.features.item.repository.ItemRepository;
 
 @SpringBootApplication
 public class BackendApplication {

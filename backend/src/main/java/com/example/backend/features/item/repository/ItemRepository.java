@@ -1,7 +1,8 @@
-package com.example.backend.item.repository;
+package com.example.backend.features.item.repository;
 
-import com.example.backend.item.model.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.backend.features.item.model.Item;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 }
