@@ -2,6 +2,7 @@ package com.example.backend.features.example.item.service.impl;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,5 +22,11 @@ public class ItemServiceImpl implements ItemService {
 
     public Page<Item> findAll(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Item> findById(Long id) {
+        return repository.findById(id);
     }
 }

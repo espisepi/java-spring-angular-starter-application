@@ -10,11 +10,51 @@
     <tr>
       <th>ID</th>
       <th>Name</th>
+      <th>Detail</th>
+      <th>Category</th>
+      <th>Images</th>
+      <th>Tags</th>
+      <th>Related Items</th>
     </tr>
     @for (item of items(); track item.id) {
     <tr>
       <td>{{ item.id }}</td>
       <td>{{ item.name }}</td>
+      <td>{{ item.detail?.description }}</td>
+      <td>{{ item.category?.name }}</td>
+      <td>
+        @if (item.images && item.images.length > 0) {
+        <ul>
+          @for (image of item.images; track image.id) {
+          <li>{{ image.url }}</li>
+          }
+        </ul>
+        } @else {
+        <span>No images</span>
+        }
+      </td>
+      <td>
+        @if (item.tags && item.tags.length > 0) {
+        <ul>
+          @for (tag of item.tags; track tag.id) {
+          <li>{{ tag.name }}</li>
+          }
+        </ul>
+        } @else {
+        <span>No tags</span>
+        }
+      </td>
+      <td>
+        @if (item.relatedItems && item.relatedItems.length > 0) {
+        <ul>
+          @for (relatedItem of item.relatedItems; track relatedItem.id) {
+          <li>{{ relatedItem.name }}</li>
+          }
+        </ul>
+        } @else {
+        <span>No related items</span>
+        }
+      </td>
     </tr>
     }
   </table>

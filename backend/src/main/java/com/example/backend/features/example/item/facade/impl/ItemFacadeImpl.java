@@ -22,6 +22,7 @@ public class ItemFacadeImpl implements ItemFacade {
 
     public Page<ItemDto> findAll(Pageable pageable) {
         Page<Item> items = itemService.findAll(pageable);
-        return items.map(ItemMapper::toItemDto);
+        return items.map(ItemMapper::toItemDTO);
     }
+
 }

@@ -1,8 +1,12 @@
 package com.example.backend.features.example.item.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import java.util.Set;
 
-public record ItemDto(
-        Long id,
-        @NotBlank(message = "Image is mandatory") String name) {
+public record ItemDto(Long id,
+        String name,
+        ItemDetailDto detail,
+        ItemCategoryDto category,
+        Set<ItemImageDto> images,
+        Set<ItemTagDto> tags,
+        Set<ItemDto> relatedItems) {
 }

@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 import com.example.backend.features.example.item.dto.ItemDto;
 
 public interface ItemFacade {
-    public Page<ItemDto> findAll(Pageable pageable);
+    Page<ItemDto> findAll(Pageable pageable);
 }

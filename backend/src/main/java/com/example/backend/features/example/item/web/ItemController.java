@@ -6,8 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
 
 import com.example.backend.features.example.item.dto.ItemDto;
+import com.example.backend.features.example.item.dto.ItemDetailDto;
 import com.example.backend.features.example.item.facade.ItemFacade;
 
 import java.util.List;
@@ -33,7 +35,7 @@ public class ItemController {
 
         Pageable pageable = PageRequest.of(page, size, parseSortParameter);
         Page<ItemDto> itemDTOs = itemFacade.findAll(pageable);
-
+        // System.out.println("ItemDTOs: " + itemDTOs.getContent());
         return ResponseEntity.ok(itemDTOs.getContent());
     }
 
