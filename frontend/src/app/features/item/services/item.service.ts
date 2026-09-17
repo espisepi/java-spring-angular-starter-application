@@ -1,17 +1,18 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { finalize, Observable, of, shareReplay, tap } from 'rxjs';
+import { catchError, EMPTY, finalize, Observable, of, shareReplay, tap } from 'rxjs';
 import { Item } from '../models/Item';
 import { ItemApiService } from './item-api.service';
 
 @Injectable({ providedIn: 'root' })
 export class ItemService {
 
-  private readonly api = inject(ItemApiService);
+  private readonly itemApiService = inject(ItemApiService);
 
   private readonly itemsState = signal<Item[]>([]);
   private readonly loadingState = signal(false);
   private readonly errorMessageState = signal<string | null>(null);
   private hasLoaded = false;
+  private cacheVersion = 0;
   private itemsRequest$: Observable<Item[]> | null = null;
 
   readonly items = this.itemsState.asReadonly();
@@ -19,15 +20,15 @@ export class ItemService {
   readonly errorMessage = this.errorMessageState.asReadonly();
 
   loadItems(): void {
-    this.loadItems$().subscribe({
-      error: () => undefined
-    });
+    this.loadItems$()
+      .pipe(catchError(() => EMPTY))
+      .subscribe();
   }
 
   refreshItems(): void {
-    this.refreshItems$().subscribe({
-      error: () => undefined
-    });
+    this.refreshItems$()
+      .pipe(catchError(() => EMPTY))
+      .subscribe();
   }
 
   loadItems$(): Observable<Item[]> {
@@ -35,33 +36,39 @@ export class ItemService {
       return of(this.items());
     }
 
-    return this.fetchItems$();
+    return this.requestItems$();
   }
 
   refreshItems$(): Observable<Item[]> {
-    return this.fetchItems$();
+    return this.requestItems$();
   }
 
   invalidateCache(): void {
     this.hasLoaded = false;
+    this.cacheVersion++;
   }
 
-  private fetchItems$(): Observable<Item[]> {
+  private requestItems$(): Observable<Item[]> {
     if (this.itemsRequest$) {
       return this.itemsRequest$;
     }
 
     this.loadingState.set(true);
     this.errorMessageState.set(null);
+    const requestVersion = this.cacheVersion;
 
-    this.itemsRequest$ = this.api.getItems().pipe(
+    this.itemsRequest$ = this.itemApiService.getItems().pipe(
       tap({
         next: items => {
-          this.itemsState.set(items);
-          this.hasLoaded = true;
+          if (requestVersion === this.cacheVersion) {
+            this.itemsState.set(items);
+            this.hasLoaded = true;
+          }
         },
         error: (error: unknown) => {
-          this.errorMessageState.set(this.getErrorMessage(error));
+          if (requestVersion === this.cacheVersion) {
+            this.errorMessageState.set(this.getErrorMessage(error));
+          }
         }
       }),
       finalize(() => {
