@@ -35,7 +35,6 @@ public class ItemController {
 
         Pageable pageable = PageRequest.of(page, size, parseSortParameter);
         Page<ItemDto> itemDTOs = itemFacade.findAll(pageable);
-        // System.out.println("ItemDTOs: " + itemDTOs.getContent());
         return ResponseEntity.ok(itemDTOs.getContent());
     }
 
