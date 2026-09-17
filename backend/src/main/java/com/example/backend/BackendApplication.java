@@ -5,8 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.example.backend.features.item.model.Item;
-import com.example.backend.features.item.repository.ItemRepository;
+import com.example.backend.features.example.item.model.Item;
+import com.example.backend.features.example.item.repository.ItemRepository;
 
 @SpringBootApplication
 public class BackendApplication {

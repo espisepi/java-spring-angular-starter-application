@@ -1,15 +1,15 @@
-package com.example.backend.features.item.facade.impl;
+package com.example.backend.features.example.item.facade.impl;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.backend.features.item.dto.ItemDto;
-import com.example.backend.features.item.facade.ItemFacade;
-import com.example.backend.features.item.mapper.ItemMapper;
-import com.example.backend.features.item.model.Item;
-import com.example.backend.features.item.service.ItemService;
+import com.example.backend.features.example.item.dto.ItemDto;
+import com.example.backend.features.example.item.facade.ItemFacade;
+import com.example.backend.features.example.item.mapper.ItemMapper;
+import com.example.backend.features.example.item.model.Item;
+import com.example.backend.features.example.item.service.ItemService;
 
 @Service
 @Transactional

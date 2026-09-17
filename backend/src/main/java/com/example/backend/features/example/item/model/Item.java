@@ -1,4 +1,4 @@
-package com.example.backend.features.item.model;
+package com.example.backend.features.example.item.model;
 
 import jakarta.persistence.*;
 

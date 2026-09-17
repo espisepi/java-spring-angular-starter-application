@@ -1,4 +1,4 @@
-package com.example.backend.features.item.web;
+package com.example.backend.features.example.item.web;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -7,8 +7,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.backend.features.item.dto.ItemDto;
-import com.example.backend.features.item.facade.ItemFacade;
+import com.example.backend.features.example.item.dto.ItemDto;
+import com.example.backend.features.example.item.facade.ItemFacade;
 
 import java.util.List;
 
