@@ -14,4 +14,10 @@
     </tr>
     }
   </table>
+  @if(loading()) {
+  <p>Loading items...</p>
+  } @else {
+  <p>Items loaded successfully.</p>
+  }
+
 </div>

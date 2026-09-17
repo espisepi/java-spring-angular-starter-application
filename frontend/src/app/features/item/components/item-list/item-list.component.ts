@@ -19,6 +19,8 @@ export class ItemListComponent {
 
   items: Signal<Item[]> = toSignal(this.itemService.getItems(), { initialValue: [] });
 
+  loading: Signal<boolean> = this.itemService.getLoadingSignal();
+
   constructor() { }
 
 }
