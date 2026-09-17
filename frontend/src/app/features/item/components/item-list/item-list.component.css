@@ -1,0 +1,303 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    background: #f3f0e9;
+    color: #24251f;
+}
+
+.workspace {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 56px 28px 80px;
+}
+
+.page-header,
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+
+.page-header {
+    margin-bottom: 30px;
+}
+
+.eyebrow {
+    margin: 0 0 8px;
+    color: #8e4b32;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+h1,
+h2,
+p {
+    margin-top: 0;
+}
+
+h1 {
+    margin-bottom: 10px;
+    font: 700 48px/1.05 Georgia, serif;
+}
+
+h2 {
+    margin-bottom: 0;
+    font: 700 25px/1.1 Georgia, serif;
+}
+
+.lede {
+    color: #68675e;
+    margin-bottom: 0;
+}
+
+.editor-panel,
+.list-panel {
+    background: #fffdf8;
+    border: 1px solid #d9d2c5;
+    box-shadow: 0 12px 32px #42382b0d;
+    padding: 26px;
+    margin-top: 22px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 26px;
+}
+
+label {
+    display: grid;
+    gap: 7px;
+    color: #514f47;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.wide-field {
+    grid-column: 1 / -1;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #cfc8ba;
+    background: #fff;
+    color: #24251f;
+    border-radius: 3px;
+    padding: 11px 12px;
+    font: inherit;
+    font-weight: 400;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.inline-create {
+    display: flex;
+    gap: 6px;
+}
+
+.inline-create input {
+    min-width: 0;
+    padding: 8px 10px;
+}
+
+.inline-create button {
+    border: 1px solid #cfc8ba;
+    background: #f3f0e9;
+    color: #385b50;
+    border-radius: 3px;
+    padding: 0 10px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+select[multiple] {
+    min-height: 106px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: 2px solid #d5a05b;
+    outline-offset: 1px;
+}
+
+small {
+    color: #a14e35;
+    font-weight: 500;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.button,
+.icon-button,
+.text-button {
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+}
+
+.button {
+    border-radius: 3px;
+    padding: 11px 16px;
+}
+
+.button-primary {
+    background: #263d36;
+    color: #fffdf8;
+}
+
+.button-secondary {
+    background: #d5a05b;
+    color: #24251f;
+}
+
+.button-quiet,
+.text-button {
+    background: transparent;
+    color: #5d665d;
+}
+
+.text-button {
+    padding: 8px 0;
+}
+
+button:disabled {
+    cursor: wait;
+    opacity: .55;
+}
+
+.notice {
+    padding: 12px 14px;
+    margin: 12px 0;
+    border-left: 4px solid;
+}
+
+.success {
+    background: #e8f0e5;
+    border-color: #64835d;
+}
+
+.error {
+    background: #f7e8e2;
+    border-color: #a14e35;
+}
+
+.table-wrap {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th {
+    color: #77736a;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+th,
+td {
+    padding: 15px 12px;
+    border-bottom: 1px solid #e6e0d5;
+    vertical-align: top;
+}
+
+td strong,
+td small {
+    display: block;
+}
+
+td small {
+    color: #969188;
+    margin-top: 4px;
+}
+
+.actions {
+    white-space: nowrap;
+}
+
+.icon-button {
+    background: transparent;
+    color: #385b50;
+    padding: 4px 7px;
+}
+
+.icon-button:hover,
+.text-button:hover {
+    text-decoration: underline;
+}
+
+.icon-button.danger {
+    color: #a14e35;
+}
+
+.is-selected {
+    background: #f8f1e4;
+}
+
+.detail-row td {
+    background: #faf6ed;
+}
+
+.detail-content {
+    display: grid;
+    gap: 7px;
+    color: #68675e;
+}
+
+.detail-content p {
+    margin: 0;
+    color: #24251f;
+}
+
+.empty-state {
+    color: #77736a;
+    padding: 28px 0 8px;
+}
+
+@media (max-width: 700px) {
+    .workspace {
+        padding: 34px 16px 56px;
+    }
+
+    .page-header,
+    .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    h1 {
+        font-size: 40px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .wide-field {
+        grid-column: auto;
+    }
+
+    .editor-panel,
+    .list-panel {
+        padding: 18px;
+    }
+}

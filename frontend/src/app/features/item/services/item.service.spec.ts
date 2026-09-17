@@ -78,6 +78,9 @@ describe('ItemService', () => {
     const firstRequest = service.loadItems$();
     const secondRequest = service.loadItems$();
 
+    firstRequest.subscribe();
+    secondRequest.subscribe();
+
     expect(firstRequest).toBe(secondRequest);
     const request = httpTestingController.expectOne('http://localhost:8080/api/items');
     request.flush([]);

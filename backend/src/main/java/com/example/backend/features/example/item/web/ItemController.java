@@ -6,11 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.Optional;
-
 import com.example.backend.features.example.item.dto.ItemDto;
-import com.example.backend.features.example.item.dto.ItemDetailDto;
+import com.example.backend.features.example.item.dto.ItemRequestDto;
+import com.example.backend.features.example.item.dto.ItemUpdateRequestDto;
 import com.example.backend.features.example.item.facade.ItemFacade;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -37,6 +37,28 @@ public class ItemController {
         Page<ItemDto> itemDTOs = itemFacade.findAll(pageable);
         // System.out.println("ItemDTOs: " + itemDTOs.getContent());
         return ResponseEntity.ok(itemDTOs.getContent());
+    }
+
+    @PostMapping
+    public ResponseEntity<ItemDto> create(@RequestBody @Valid ItemRequestDto request) {
+        return ResponseEntity.ok(itemFacade.create(request));
+    }
+
+    @GetMapping("/{itemId}")
+    public ResponseEntity<ItemDto> findById(@PathVariable Long itemId) {
+        return ResponseEntity.ok(itemFacade.findById(itemId));
+    }
+
+    @PutMapping("/{itemId}")
+    public ResponseEntity<ItemDto> update(@PathVariable Long itemId,
+            @RequestBody @Valid ItemUpdateRequestDto request) {
+        return ResponseEntity.ok(itemFacade.update(itemId, request));
+    }
+
+    @DeleteMapping("/{itemId}")
+    public ResponseEntity<Void> delete(@PathVariable Long itemId) {
+        itemFacade.delete(itemId);
+        return ResponseEntity.noContent().build();
     }
 
 }

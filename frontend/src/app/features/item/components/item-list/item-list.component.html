@@ -1,78 +1,95 @@
-<div style="height: 100vh; background-color: #373737; color: #a3a3a3;">
+<main class="workspace">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">CATÁLOGO / OPERACIONES</p>
+      <h1>Items</h1>
+      <p class="lede">Gestiona el catálogo y prueba cada operación contra la API.</p>
+    </div>
+    <button class="button button-secondary" type="button" (click)="resetForm()">Nuevo item</button>
+  </header>
+  @if (actionMessage()) { <p class="notice success">{{ actionMessage() }}</p> }
+  @if (actionError()) { <p class="notice error">{{ actionError() }}</p> }
+  @if (errorMessage()) { <p class="notice error">{{ errorMessage() }}</p> }
 
-  <h1>Welcome to the Item List Component</h1>
+  <section class="editor-panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">{{ editingId() === null ? 'ALTA' : 'EDICIÓN' }}</p>
+        <h2>{{ editingId() === null ? 'Crear item' : 'Actualizar item' }}</h2>
+      </div>
+      @if (editingId() !== null) { <button class="text-button" type="button" (click)="resetForm()">Cancelar
+        edición</button> }
+    </div>
+    <form [formGroup]="itemForm" (ngSubmit)="submit()">
+      <div class="form-grid">
+        <label>Nombre<input formControlName="name" placeholder="Ej. Mancuerna hexagonal" />@if
+          (itemForm.controls.name.touched && itemForm.controls.name.invalid) { <small>Indica un nombre.</small>
+          }</label>
+        <label>Categoría<select formControlName="categoryId">
+            <option [ngValue]="0" disabled>Selecciona una categoría</option>@for (category of categories(); track
+            category.id) { <option [ngValue]="category.id">{{ category.name }}</option> }
+          </select><span class="inline-create"><input [formControl]="newCategoryName"
+              placeholder="Nueva categoría" /><button type="button" (click)="createCategory()">Añadir</button></span>@if
+          (categories().length === 0) { <small>No hay categorías disponibles.</small> }</label>
+        <label class="wide-field">Descripción<textarea formControlName="description" rows="3"
+            placeholder="Describe el item"></textarea></label>
+        <label>Tags<select formControlName="tagIds" multiple>@for (tag of tags(); track tag.id) { <option
+              [ngValue]="tag.id">{{ tag.name }}</option> }</select><span class="inline-create"><input
+              [formControl]="newTagName" placeholder="Nuevo tag" /><button type="button"
+              (click)="createTag()">Añadir</button></span></label>
+        <label>Items relacionados<select formControlName="relatedItemIds" multiple>@for (item of items(); track item.id)
+            { <option [ngValue]="item.id">{{ item.name }}</option> }</select></label>
+      </div>
+      <div class="form-actions"><button class="button button-primary" type="submit">{{ editingId() === null ? 'Crear
+          item' : 'Guardar cambios' }}</button><button class="button button-quiet" type="button"
+          (click)="resetForm()">Limpiar</button></div>
+    </form>
+  </section>
 
-  <p>This component displays a list of items fetched from the backend.</p>
-
-  <h2>Item List</h2>
-
-  <table border="1">
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Detail</th>
-      <th>Category</th>
-      <th>Images</th>
-      <th>Tags</th>
-      <th>Related Items</th>
-    </tr>
-    @for (item of items(); track item.id) {
-    <tr>
-      <td>{{ item.id }}</td>
-      <td>{{ item.name }}</td>
-      <td>{{ item.detail?.description }}</td>
-      <td>{{ item.category?.name }}</td>
-      <td>
-        @if (item.images && item.images.length > 0) {
-        <ul>
-          @for (image of item.images; track image.id) {
-          <li>{{ image.url }}</li>
+  <section class="list-panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">REGISTROS</p>
+        <h2>Items guardados</h2>
+      </div><button class="button button-quiet" type="button" (click)="refresh()"
+        [disabled]="isLoading()">Actualizar</button>
+    </div>
+    @if (isLoading() && items().length === 0) { <p class="empty-state">Cargando items...</p> } @else if (items().length
+    === 0) { <p class="empty-state">No hay items todavía.</p> } @else {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Tags</th>
+            <th>Relaciones</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of items(); track item.id) { <tr [class.is-selected]="selectedItem()?.id === item.id">
+            <td><strong>{{ item.name }}</strong><small>#{{ item.id }}</small></td>
+            <td>{{ item.category?.name || 'Sin categoría' }}</td>
+            <td>{{ item.tags?.length || 0 }}</td>
+            <td>{{ item.relatedItems?.length || 0 }}</td>
+            <td class="actions"><button class="icon-button" type="button" title="Ver detalle"
+                (click)="showDetails(item)">Ver</button><button class="icon-button" type="button" title="Editar item"
+                (click)="edit(item)">Editar</button><button class="icon-button danger" type="button"
+                title="Eliminar item" (click)="delete(item)">Eliminar</button></td>
+          </tr>
+          @if (selectedItem()?.id === item.id) { <tr class="detail-row">
+            <td colspan="5">
+              <div class="detail-content"><strong>Descripción</strong>
+                <p>{{ item.detail?.description || 'Sin descripción' }}</p><span>{{ item.images?.length || 0 }} imágenes
+                  · {{ item.tags?.length || 0 }} tags · {{ item.relatedItems?.length || 0 }} relacionados</span>
+              </div>
+            </td>
+          </tr> }
           }
-        </ul>
-        } @else {
-        <span>No images</span>
-        }
-      </td>
-      <td>
-        @if (item.tags && item.tags.length > 0) {
-        <ul>
-          @for (tag of item.tags; track tag.id) {
-          <li>{{ tag.name }}</li>
-          }
-        </ul>
-        } @else {
-        <span>No tags</span>
-        }
-      </td>
-      <td>
-        @if (item.relatedItems && item.relatedItems.length > 0) {
-        <ul>
-          @for (relatedItem of item.relatedItems; track relatedItem.id) {
-          <li>{{ relatedItem.name }}</li>
-          }
-        </ul>
-        } @else {
-        <span>No related items</span>
-        }
-      </td>
-    </tr>
+        </tbody>
+      </table>
+    </div>
     }
-  </table>
-
-  @if(isLoading() && !errorMessage()) {
-  <p>Loading items...</p>
-  }
-  @else if(!isLoading() && !errorMessage()) {
-  <p>Items loaded successfully.</p>
-  }
-  @else {
-  <p>Items loaded with errors.</p>
-  }
-
-  @if(errorMessage()) {
-  <p>Error loading items: {{ errorMessage() }}</p>
-  } @else {
-  <p>No errors occurred while loading items.</p>
-  }
-
-</div>
+  </section>
+</main>

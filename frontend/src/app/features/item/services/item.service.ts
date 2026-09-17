@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { catchError, EMPTY, finalize, Observable, of, shareReplay, tap } from 'rxjs';
-import { Item } from '../models/Item';
+import { Item, ItemOption, ItemRequest } from '../models/Item';
 import { ItemApiService } from './item-api.service';
 
 @Injectable({ providedIn: 'root' })
@@ -11,6 +11,8 @@ export class ItemService {
   private readonly itemsState = signal<Item[]>([]);
   private readonly loadingState = signal(false);
   private readonly errorMessageState = signal<string | null>(null);
+  private readonly categoriesState = signal<ItemOption[]>([]);
+  private readonly tagsState = signal<ItemOption[]>([]);
   private hasLoaded = false;
   private cacheVersion = 0;
   private itemsRequest$: Observable<Item[]> | null = null;
@@ -18,6 +20,8 @@ export class ItemService {
   readonly items = this.itemsState.asReadonly();
   readonly isLoading = this.loadingState.asReadonly();
   readonly errorMessage = this.errorMessageState.asReadonly();
+  readonly categories = this.categoriesState.asReadonly();
+  readonly tags = this.tagsState.asReadonly();
 
   loadItems(): void {
     this.loadItems$()
@@ -29,6 +33,31 @@ export class ItemService {
     this.refreshItems$()
       .pipe(catchError(() => EMPTY))
       .subscribe();
+  }
+
+  loadOptions(): void {
+    this.itemApiService.getCategories().subscribe({ next: categories => this.categoriesState.set(categories) });
+    this.itemApiService.getTags().subscribe({ next: tags => this.tagsState.set(tags) });
+  }
+
+  createCategory(name: string): Observable<ItemOption> {
+    return this.itemApiService.createCategory(name).pipe(tap(() => this.loadOptions()));
+  }
+
+  createTag(name: string): Observable<ItemOption> {
+    return this.itemApiService.createTag(name).pipe(tap(() => this.loadOptions()));
+  }
+
+  createItem(request: ItemRequest): Observable<Item> {
+    return this.itemApiService.createItem(request).pipe(tap(() => this.invalidateCache()));
+  }
+
+  updateItem(id: number, request: ItemRequest): Observable<Item> {
+    return this.itemApiService.updateItem(id, request).pipe(tap(() => this.invalidateCache()));
+  }
+
+  deleteItem(id: number): Observable<void> {
+    return this.itemApiService.deleteItem(id).pipe(tap(() => this.invalidateCache()));
   }
 
   loadItems$(): Observable<Item[]> {

@@ -21,6 +21,8 @@ describe('ItemListComponent', () => {
     httpTestingController = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
     httpTestingController.expectOne('http://localhost:8080/api/items').flush([]);
+    httpTestingController.expectOne('http://localhost:8080/api/item-categories').flush([]);
+    httpTestingController.expectOne('http://localhost:8080/api/item-tags').flush([]);
   });
 
   afterEach(() => {
