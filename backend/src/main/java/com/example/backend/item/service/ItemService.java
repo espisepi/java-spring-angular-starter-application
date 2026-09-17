@@ -1,7 +1,8 @@
-package com.example.backend.service;
+package com.example.backend.item.service;
 
-import com.example.backend.model.Item;
-import com.example.backend.repository.ItemRepository;
+import com.example.backend.item.repository.ItemRepository;
+import com.example.backend.item.model.Item;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;

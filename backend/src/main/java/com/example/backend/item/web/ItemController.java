@@ -1,12 +1,13 @@
-package com.example.backend.controller;
+package com.example.backend.item.web;
 
-import com.example.backend.model.Item;
-import com.example.backend.service.ItemService;
+import com.example.backend.item.service.ItemService;
+import com.example.backend.item.model.Item;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*") 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/items")
 public class ItemController {
