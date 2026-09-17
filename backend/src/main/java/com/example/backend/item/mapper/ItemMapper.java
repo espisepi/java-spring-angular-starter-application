@@ -1,7 +1,5 @@
 package com.example.backend.item.mapper;
 
-import java.util.stream.Collectors;
-
 import com.example.backend.item.dto.ItemDto;
 import com.example.backend.item.model.Item;
 

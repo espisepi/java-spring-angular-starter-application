@@ -1,9 +1,7 @@
 package com.example.backend.item.web;
 
-import com.example.backend.item.service.ItemService;
 import com.example.backend.item.dto.ItemDto;
 import com.example.backend.item.facade.ItemFacade;
-import com.example.backend.item.model.Item;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
