@@ -32,7 +32,7 @@ public class ItemController {
         Sort parseSortParameter = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
 
         Pageable pageable = PageRequest.of(page, size, parseSortParameter);
-        Page<ItemDto> itemDTOs = itemFacade.getAllItems(pageable);
+        Page<ItemDto> itemDTOs = itemFacade.findAll(pageable);
 
         return ResponseEntity.ok(itemDTOs.getContent());
     }
