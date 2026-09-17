@@ -1,8 +1,10 @@
 // src/app/item-list.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ItemService, Item } from '../../services/item.service';
+import { ItemService } from '../../services/item.service';
 import { HttpClientModule } from '@angular/common/http';
+import { Item } from '../../models/Item';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-item-list',
@@ -11,12 +13,12 @@ import { HttpClientModule } from '@angular/common/http';
   templateUrl: './item-list.component.html',
   styleUrls: ['./item-list.component.css']
 })
-export class ItemListComponent implements OnInit {
-  items: Item[] = [];
+export class ItemListComponent {
 
-  constructor(private itemService: ItemService) { }
+  itemService: ItemService = inject(ItemService);
 
-  ngOnInit(): void {
-    this.itemService.getItems().subscribe(data => this.items = data);
-  }
+  items: Signal<Item[]> = toSignal(this.itemService.getItems(), { initialValue: [] });
+
+  constructor() { }
+
 }
