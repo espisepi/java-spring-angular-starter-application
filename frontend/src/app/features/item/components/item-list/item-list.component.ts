@@ -1,10 +1,10 @@
 // src/app/item-list.component.ts
-import { Component, inject, OnInit, signal, Signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ItemService } from '../../services/item.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Item } from '../../models/Item';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-item-list',
@@ -14,15 +14,10 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
   styleUrls: ['./item-list.component.css']
 })
 export class ItemListComponent {
+  private readonly itemService = inject(ItemService);
 
-  itemService: ItemService = inject(ItemService);
-
-  items: Signal<Item[]> = toSignal(this.itemService.getItems(), { initialValue: [] });
-
-  loading: Signal<boolean> = this.itemService.getLoadingSignal();
-
-  error: Signal<Error | null> = this.itemService.getErrorSignal();
-
-  constructor() { }
+  readonly items = toSignal(this.itemService.getItems(), { initialValue: [] as Item[] });
+  readonly isLoading = this.itemService.isLoading;
+  readonly errorMessage = this.itemService.errorMessage;
 
 }

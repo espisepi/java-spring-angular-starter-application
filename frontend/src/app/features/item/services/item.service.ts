@@ -1,55 +1,41 @@
-// src/app/item.service.ts
-import { Injectable, Signal, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, tap } from 'rxjs';
+import { Injectable, inject, signal } from '@angular/core';
+import { catchError, finalize, Observable, of } from 'rxjs';
 import { Item } from '../models/Item';
-import { toObservable } from '@angular/core/rxjs-interop';
 
 @Injectable({ providedIn: 'root' })
 export class ItemService {
-  private apiUrl = 'http://localhost:8080/api/items';
-  private loading = signal(false);
-  private error = signal<Error | null>(null);
+  private readonly http = inject(HttpClient);
+  private readonly itemsEndpoint = 'http://localhost:8080/api/items';
+  private readonly loadingState = signal(false);
+  private readonly errorMessageState = signal<string | null>(null);
 
-
-  constructor(private http: HttpClient) { }
+  readonly isLoading = this.loadingState.asReadonly();
+  readonly errorMessage = this.errorMessageState.asReadonly();
 
   getItems(): Observable<Item[]> {
-    this.loading.set(true);
+    this.loadingState.set(true);
+    this.errorMessageState.set(null);
 
-    return this.http.get<Item[]>(this.apiUrl).pipe(
-      tap(() => this.loading.set(false)),
-      catchError((error) => {
-        console.error('Error fetching items:', error);
-        this.loading.set(false);
-        this.error.set(error);
-        return [];
-      })
+    return this.http.get<Item[]>(this.itemsEndpoint).pipe(
+      catchError((error: unknown) => {
+        console.error('Failed to load items', error);
+        this.errorMessageState.set(this.getErrorMessage(error));
+        return of([]);
+      }),
+      finalize(() => this.loadingState.set(false))
     );
   }
 
-  getLoading(): boolean {
-    return this.loading();
-  }
+  private getErrorMessage(error: unknown): string {
+    if (error instanceof Error) {
+      return error.message;
+    }
 
-  getLoadingSignal(): Signal<boolean> {
-    return this.loading;
-  }
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      return String(error.message);
+    }
 
-  getLoadingObservable(): Observable<boolean> {
-    return toObservable(this.loading);
+    return 'Unable to load items.';
   }
-
-  getError(): Error | null {
-    return this.error();
-  }
-
-  getErrorSignal(): Signal<Error | null> {
-    return this.error;
-  }
-
-  getErrorObservable(): Observable<Error | null> {
-    return toObservable(this.error);
-  }
-
 }
