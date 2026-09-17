@@ -2,12 +2,11 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ItemService } from '../../services/item.service';
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-item-list',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule],
   templateUrl: './item-list.component.html',
   styleUrls: ['./item-list.component.css']
 })
