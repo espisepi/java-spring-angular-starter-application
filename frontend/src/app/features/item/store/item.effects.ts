@@ -1,17 +1,17 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, concatMap, exhaustMap, forkJoin, map, of, switchMap } from 'rxjs';
-import { ItemConnector } from '../connectors/item.connector';
+import { ItemService } from '../services/item.service';
 import * as ItemActions from './item.actions';
 
 @Injectable()
 export class ItemEffects {
   private readonly actions$ = inject(Actions);
-  private readonly connector = inject(ItemConnector);
+  private readonly itemService = inject(ItemService);
 
   readonly loadItems$ = createEffect(() => this.actions$.pipe(
     ofType(ItemActions.loadItems),
-    exhaustMap(() => this.connector.getItems().pipe(
+    exhaustMap(() => this.itemService.getItems().pipe(
       map(items => ItemActions.loadItemsSuccess({ items })),
       catchError(error => of(ItemActions.loadItemsFailure({ error: this.getErrorMessage(error) })))
     ))
@@ -20,8 +20,8 @@ export class ItemEffects {
   readonly loadOptions$ = createEffect(() => this.actions$.pipe(
     ofType(ItemActions.loadItemOptions),
     switchMap(() => forkJoin({
-      categories: this.connector.getCategories(),
-      tags: this.connector.getTags()
+      categories: this.itemService.getCategories(),
+      tags: this.itemService.getTags()
     }).pipe(
       switchMap(({ categories, tags }) => [
         ItemActions.loadCategoriesSuccess({ categories }),
@@ -33,7 +33,7 @@ export class ItemEffects {
 
   readonly createItem$ = createEffect(() => this.actions$.pipe(
     ofType(ItemActions.createItem),
-    concatMap(({ requestId, request }) => this.connector.createItem(request).pipe(
+    concatMap(({ requestId, request }) => this.itemService.createItem(request).pipe(
       switchMap(item => [
         ItemActions.createItemSuccess({ requestId, item }),
         ItemActions.loadItems()
@@ -44,7 +44,7 @@ export class ItemEffects {
 
   readonly updateItem$ = createEffect(() => this.actions$.pipe(
     ofType(ItemActions.updateItem),
-    concatMap(({ requestId, id, request }) => this.connector.updateItem(id, request).pipe(
+    concatMap(({ requestId, id, request }) => this.itemService.updateItem(id, request).pipe(
       switchMap(item => [
         ItemActions.updateItemSuccess({ requestId, item }),
         ItemActions.loadItems()
@@ -55,7 +55,7 @@ export class ItemEffects {
 
   readonly deleteItem$ = createEffect(() => this.actions$.pipe(
     ofType(ItemActions.deleteItem),
-    concatMap(({ requestId, id }) => this.connector.deleteItem(id).pipe(
+    concatMap(({ requestId, id }) => this.itemService.deleteItem(id).pipe(
       switchMap(() => [
         ItemActions.deleteItemSuccess({ requestId }),
         ItemActions.loadItems()
@@ -66,7 +66,7 @@ export class ItemEffects {
 
   readonly createCategory$ = createEffect(() => this.actions$.pipe(
     ofType(ItemActions.createCategory),
-    concatMap(({ requestId, name }) => this.connector.createCategory(name).pipe(
+    concatMap(({ requestId, name }) => this.itemService.createCategory(name).pipe(
       switchMap(category => [
         ItemActions.createCategorySuccess({ requestId, category }),
         ItemActions.loadItemOptions()
@@ -77,7 +77,7 @@ export class ItemEffects {
 
   readonly createTag$ = createEffect(() => this.actions$.pipe(
     ofType(ItemActions.createTag),
-    concatMap(({ requestId, name }) => this.connector.createTag(name).pipe(
+    concatMap(({ requestId, name }) => this.itemService.createTag(name).pipe(
       switchMap(tag => [
         ItemActions.createTagSuccess({ requestId, tag }),
         ItemActions.loadItemOptions()

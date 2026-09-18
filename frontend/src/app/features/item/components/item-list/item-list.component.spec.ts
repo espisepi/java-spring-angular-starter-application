@@ -7,7 +7,6 @@ import { ItemListComponent } from './item-list.component';
 import { ItemAdapter } from '../../adapters/item.adapter';
 import { ItemRestAdapter } from '../../adapters/item-rest.adapter';
 import { ItemFacade } from '../../facade/item.facade';
-import { ItemService } from '../../services/item.service';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { itemFeatureKey, itemReducer } from '../../store/item.reducer';
@@ -26,7 +25,6 @@ describe('ItemListComponent', () => {
         provideHttpClientTesting(),
         provideRouter([]),
         { provide: ItemAdapter, useClass: ItemRestAdapter },
-        { provide: ItemFacade, useExisting: ItemService },
         provideStore({ [itemFeatureKey]: itemReducer }),
         provideEffects([ItemEffects])
       ]
