@@ -25,14 +25,6 @@ export interface Item {
   }[];
 }
 
-export interface ItemRequest {
-  name: string;
-  description: string;
-  categoryId: number;
-  tagIds: number[];
-  relatedItemIds: number[];
-}
-
 export interface ItemOption {
   id: number;
   name: string;

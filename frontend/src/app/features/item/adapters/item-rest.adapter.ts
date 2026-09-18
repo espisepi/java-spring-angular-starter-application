@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { Item, ItemOption, ItemRequest } from '../models/Item';
+import { Item, ItemOption } from '../models/Item';
+import { ItemDto } from '../models/item-dto';
 import { ItemAdapter } from './item.adapter';
 
 @Injectable()
@@ -22,11 +23,11 @@ export class ItemRestAdapter extends ItemAdapter {
         return this.http.get<Item>(`${this.itemsEndpoint}/${id}`);
     }
 
-    createItem(request: ItemRequest): Observable<Item> {
+    createItem(request: ItemDto): Observable<Item> {
         return this.http.post<Item>(this.itemsEndpoint, request);
     }
 
-    updateItem(id: number, request: ItemRequest): Observable<Item> {
+    updateItem(id: number, request: ItemDto): Observable<Item> {
         return this.http.put<Item>(`${this.itemsEndpoint}/${id}`, request);
     }
 

@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { Category, CategoryRequest } from '../models/category';
+import { Category } from '../models/category';
+import { CategoryDto } from '../models/category-dto';
 import { CategoryAdapter } from './category.adapter';
 
 @Injectable()
@@ -14,11 +15,11 @@ export class CategoryRestAdapter extends CategoryAdapter {
     return this.http.get<Category[]>(this.endpoint);
   }
 
-  create(request: CategoryRequest): Observable<Category> {
+  create(request: CategoryDto): Observable<Category> {
     return this.http.post<Category>(this.endpoint, request);
   }
 
-  update(id: number, request: CategoryRequest): Observable<Category> {
+  update(id: number, request: CategoryDto): Observable<Category> {
     return this.http.put<Category>(`${this.endpoint}/${id}`, request);
   }
 

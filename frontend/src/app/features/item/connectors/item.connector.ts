@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Item, ItemOption, ItemRequest } from '../models/Item';
+import { Item, ItemOption } from '../models/Item';
+import { ItemDto } from '../models/item-dto';
 import { ItemAdapter } from '../adapters/item.adapter';
 
 @Injectable({ providedIn: 'root' })
@@ -15,11 +16,11 @@ export class ItemConnector {
         return this.adapter.getItem(id);
     }
 
-    createItem(request: ItemRequest): Observable<Item> {
+    createItem(request: ItemDto): Observable<Item> {
         return this.adapter.createItem(request);
     }
 
-    updateItem(id: number, request: ItemRequest): Observable<Item> {
+    updateItem(id: number, request: ItemDto): Observable<Item> {
         return this.adapter.updateItem(id, request);
     }
 

@@ -1,11 +1,12 @@
-import { Tag, TagRequest } from '../models/tag';
+import { Tag } from '../models/tag';
+import { TagDto } from '../models/tag-dto';
 
 export class TagMapper {
-    static toRequest(tag: Tag): TagRequest {
-        return { name: tag.name };
-    }
+  static toDto(tag: Tag): TagDto {
+    return { name: tag.name };
+  }
 
-    static toModel(tag: Tag): Tag {
-        return tag;
-    }
+  static toModel(tag: Tag): Tag {
+    return tag;
+  }
 }

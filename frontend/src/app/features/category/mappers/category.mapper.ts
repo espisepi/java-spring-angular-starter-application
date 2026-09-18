@@ -1,11 +1,12 @@
-import { Category, CategoryRequest } from '../models/category';
+import { Category } from '../models/category';
+import { CategoryDto } from '../models/category-dto';
 
 export class CategoryMapper {
-    static toRequest(category: Category): CategoryRequest {
-        return { name: category.name };
-    }
+  static toDto(category: Category): CategoryDto {
+    return { name: category.name };
+  }
 
-    static toModel(category: Category): Category {
-        return category;
-    }
+  static toModel(category: Category): Category {
+    return category;
+  }
 }

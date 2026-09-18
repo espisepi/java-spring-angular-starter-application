@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Item, ItemOption, ItemRequest } from '../models/Item';
+import { Item, ItemOption } from '../models/Item';
+import { ItemDto } from '../models/item-dto';
 import { ItemConnector } from '../connectors/item.connector';
 
 @Injectable({ providedIn: 'root' })
@@ -8,8 +9,8 @@ export class ItemService {
     private readonly connector = inject(ItemConnector);
 
     getItems(): Observable<Item[]> { return this.connector.getItems(); }
-    createItem(request: ItemRequest): Observable<Item> { return this.connector.createItem(request); }
-    updateItem(id: number, request: ItemRequest): Observable<Item> { return this.connector.updateItem(id, request); }
+    createItem(request: ItemDto): Observable<Item> { return this.connector.createItem(request); }
+    updateItem(id: number, request: ItemDto): Observable<Item> { return this.connector.updateItem(id, request); }
     deleteItem(id: number): Observable<void> { return this.connector.deleteItem(id); }
     getCategories(): Observable<ItemOption[]> { return this.connector.getCategories(); }
     createCategory(name: string): Observable<ItemOption> { return this.connector.createCategory(name); }

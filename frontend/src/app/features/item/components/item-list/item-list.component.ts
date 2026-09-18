@@ -4,7 +4,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { ItemFacade } from '../../facade/item.facade';
-import { Item, ItemRequest } from '../../models/Item';
+import { Item } from '../../models/Item';
+import { ItemDto } from '../../models/item-dto';
 
 @Component({
   selector: 'app-item-list',
@@ -48,7 +49,7 @@ export class ItemListComponent {
       return;
     }
 
-    const request: ItemRequest = this.itemForm.getRawValue();
+    const request: ItemDto = this.itemForm.getRawValue();
     const editingId = this.editingId();
     const operation$ = editingId === null
       ? this.itemFacade.createItem(request)

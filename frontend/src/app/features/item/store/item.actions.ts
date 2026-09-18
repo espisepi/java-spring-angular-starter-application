@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
-import { Item, ItemOption, ItemRequest } from '../models/Item';
+import { Item, ItemOption } from '../models/Item';
+import { ItemDto } from '../models/item-dto';
 
 export const loadItems = createAction('[Item] Load Items');
 export const loadItemsSuccess = createAction('[Item] Load Items Success', props<{ items: Item[] }>());
@@ -11,11 +12,11 @@ export const loadCategoriesFailure = createAction('[Item] Load Categories Failur
 export const loadTagsSuccess = createAction('[Item] Load Tags Success', props<{ tags: ItemOption[] }>());
 export const loadTagsFailure = createAction('[Item] Load Tags Failure', props<{ error: string }>());
 
-export const createItem = createAction('[Item] Create Item', props<{ requestId: string; request: ItemRequest }>());
+export const createItem = createAction('[Item] Create Item', props<{ requestId: string; request: ItemDto }>());
 export const createItemSuccess = createAction('[Item] Create Item Success', props<{ requestId: string; item: Item }>());
 export const createItemFailure = createAction('[Item] Create Item Failure', props<{ requestId: string; error: string }>());
 
-export const updateItem = createAction('[Item] Update Item', props<{ requestId: string; id: number; request: ItemRequest }>());
+export const updateItem = createAction('[Item] Update Item', props<{ requestId: string; id: number; request: ItemDto }>());
 export const updateItemSuccess = createAction('[Item] Update Item Success', props<{ requestId: string; item: Item }>());
 export const updateItemFailure = createAction('[Item] Update Item Failure', props<{ requestId: string; error: string }>());
 
