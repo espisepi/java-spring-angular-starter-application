@@ -1,12 +1,11 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { catchError, EMPTY, finalize, Observable, of, shareReplay, tap } from 'rxjs';
 import { Item, ItemOption, ItemRequest } from '../models/Item';
-import { ItemApiService } from './item-api.service';
+import { ItemConnector } from '../connectors/item.connector';
 
 @Injectable({ providedIn: 'root' })
-export class ItemService {
-
-  private readonly itemApiService = inject(ItemApiService);
+export class ItemFacade {
+  private readonly connector = inject(ItemConnector);
 
   private readonly itemsState = signal<Item[]>([]);
   private readonly loadingState = signal(false);
@@ -24,48 +23,40 @@ export class ItemService {
   readonly tags = this.tagsState.asReadonly();
 
   loadItems(): void {
-    this.loadItems$()
-      .pipe(catchError(() => EMPTY))
-      .subscribe();
+    this.loadItems$().pipe(catchError(() => EMPTY)).subscribe();
   }
 
   refreshItems(): void {
-    this.refreshItems$()
-      .pipe(catchError(() => EMPTY))
-      .subscribe();
+    this.refreshItems$().pipe(catchError(() => EMPTY)).subscribe();
   }
 
   loadOptions(): void {
-    this.itemApiService.getCategories().subscribe({ next: categories => this.categoriesState.set(categories) });
-    this.itemApiService.getTags().subscribe({ next: tags => this.tagsState.set(tags) });
+    this.connector.getCategories().subscribe({ next: categories => this.categoriesState.set(categories) });
+    this.connector.getTags().subscribe({ next: tags => this.tagsState.set(tags) });
   }
 
   createCategory(name: string): Observable<ItemOption> {
-    return this.itemApiService.createCategory(name).pipe(tap(() => this.loadOptions()));
+    return this.connector.createCategory(name).pipe(tap(() => this.loadOptions()));
   }
 
   createTag(name: string): Observable<ItemOption> {
-    return this.itemApiService.createTag(name).pipe(tap(() => this.loadOptions()));
+    return this.connector.createTag(name).pipe(tap(() => this.loadOptions()));
   }
 
   createItem(request: ItemRequest): Observable<Item> {
-    return this.itemApiService.createItem(request).pipe(tap(() => this.invalidateCache()));
+    return this.connector.createItem(request).pipe(tap(() => this.invalidateCache()));
   }
 
   updateItem(id: number, request: ItemRequest): Observable<Item> {
-    return this.itemApiService.updateItem(id, request).pipe(tap(() => this.invalidateCache()));
+    return this.connector.updateItem(id, request).pipe(tap(() => this.invalidateCache()));
   }
 
   deleteItem(id: number): Observable<void> {
-    return this.itemApiService.deleteItem(id).pipe(tap(() => this.invalidateCache()));
+    return this.connector.deleteItem(id).pipe(tap(() => this.invalidateCache()));
   }
 
   loadItems$(): Observable<Item[]> {
-    if (this.hasLoaded) {
-      return of(this.items());
-    }
-
-    return this.requestItems$();
+    return this.hasLoaded ? of(this.items()) : this.requestItems$();
   }
 
   refreshItems$(): Observable<Item[]> {
@@ -86,7 +77,7 @@ export class ItemService {
     this.errorMessageState.set(null);
     const requestVersion = this.cacheVersion;
 
-    this.itemsRequest$ = this.itemApiService.getItems().pipe(
+    this.itemsRequest$ = this.connector.getItems().pipe(
       tap({
         next: items => {
           if (requestVersion === this.cacheVersion) {

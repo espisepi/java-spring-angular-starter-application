@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ItemService } from '../../services/item.service';
+import { ItemFacade } from '../../facade/item.facade';
 import { Item, ItemRequest } from '../../models/Item';
 
 @Component({
@@ -12,14 +12,14 @@ import { Item, ItemRequest } from '../../models/Item';
   styleUrls: ['./item-list.component.css']
 })
 export class ItemListComponent {
-  private readonly itemService = inject(ItemService);
+  private readonly itemFacade = inject(ItemFacade);
   private readonly formBuilder = inject(FormBuilder);
 
-  readonly items = this.itemService.items;
-  readonly isLoading = this.itemService.isLoading;
-  readonly errorMessage = this.itemService.errorMessage;
-  readonly categories = this.itemService.categories;
-  readonly tags = this.itemService.tags;
+  readonly items = this.itemFacade.items;
+  readonly isLoading = this.itemFacade.isLoading;
+  readonly errorMessage = this.itemFacade.errorMessage;
+  readonly categories = this.itemFacade.categories;
+  readonly tags = this.itemFacade.tags;
   readonly editingId = signal<number | null>(null);
   readonly selectedItem = signal<Item | null>(null);
   readonly actionMessage = signal<string | null>(null);
@@ -36,8 +36,8 @@ export class ItemListComponent {
   });
 
   constructor() {
-    this.itemService.loadItems();
-    this.itemService.loadOptions();
+    this.itemFacade.loadItems();
+    this.itemFacade.loadOptions();
   }
 
   submit(): void {
@@ -49,8 +49,8 @@ export class ItemListComponent {
     const request: ItemRequest = this.itemForm.getRawValue();
     const editingId = this.editingId();
     const operation$ = editingId === null
-      ? this.itemService.createItem(request)
-      : this.itemService.updateItem(editingId, request);
+      ? this.itemFacade.createItem(request)
+      : this.itemFacade.updateItem(editingId, request);
 
     this.actionMessage.set(null);
     this.actionError.set(null);
@@ -58,7 +58,7 @@ export class ItemListComponent {
       next: () => {
         this.actionMessage.set(editingId === null ? 'Item creado correctamente.' : 'Item actualizado correctamente.');
         this.resetForm();
-        this.itemService.refreshItems();
+        this.itemFacade.refreshItems();
       },
       error: error => this.actionError.set(this.getErrorMessage(error))
     });
@@ -82,16 +82,16 @@ export class ItemListComponent {
   }
 
   refresh(): void {
-    this.itemService.refreshItems();
+    this.itemFacade.refreshItems();
   }
 
   createCategory(): void {
     const name = this.newCategoryName.value.trim();
     if (!name) return;
-    this.itemService.createCategory(name).subscribe({
+    this.itemFacade.createCategory(name).subscribe({
       next: category => {
         this.newCategoryName.reset();
-        this.itemService.loadOptions();
+        this.itemFacade.loadOptions();
         this.itemForm.controls.categoryId.setValue(category.id);
       },
       error: error => this.actionError.set(this.getErrorMessage(error))
@@ -101,10 +101,10 @@ export class ItemListComponent {
   createTag(): void {
     const name = this.newTagName.value.trim();
     if (!name) return;
-    this.itemService.createTag(name).subscribe({
+    this.itemFacade.createTag(name).subscribe({
       next: tag => {
         this.newTagName.reset();
-        this.itemService.loadOptions();
+        this.itemFacade.loadOptions();
         this.itemForm.controls.tagIds.setValue([...this.itemForm.controls.tagIds.value, tag.id]);
       },
       error: error => this.actionError.set(this.getErrorMessage(error))
@@ -118,10 +118,10 @@ export class ItemListComponent {
 
     this.actionMessage.set(null);
     this.actionError.set(null);
-    this.itemService.deleteItem(item.id).subscribe({
+    this.itemFacade.deleteItem(item.id).subscribe({
       next: () => {
         this.actionMessage.set('Item eliminado correctamente.');
-        this.itemService.refreshItems();
+        this.itemFacade.refreshItems();
         if (this.selectedItem()?.id === item.id) {
           this.selectedItem.set(null);
         }

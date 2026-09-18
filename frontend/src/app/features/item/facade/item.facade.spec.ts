@@ -2,17 +2,23 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { ItemService } from './item.service';
+import { ItemAdapter } from '../adapters/item.adapter';
+import { ItemRestAdapter } from '../adapters/item-rest.adapter';
+import { ItemFacade } from './item.facade';
 
-describe('ItemService', () => {
-  let service: ItemService;
+describe('ItemFacade', () => {
+  let facade: ItemFacade;
   let httpTestingController: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ItemAdapter, useClass: ItemRestAdapter }
+      ]
     });
-    service = TestBed.inject(ItemService);
+    facade = TestBed.inject(ItemFacade);
     httpTestingController = TestBed.inject(HttpTestingController);
   });
 
@@ -21,38 +27,38 @@ describe('ItemService', () => {
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(facade).toBeTruthy();
   });
 
   it('loads items and updates the state', () => {
-    service.loadItems();
+    facade.loadItems();
 
-    expect(service.isLoading()).toBeTrue();
+    expect(facade.isLoading()).toBeTrue();
     const request = httpTestingController.expectOne('http://localhost:8080/api/items');
     request.flush([{ id: 1, name: 'Item 1' }]);
 
-    expect(service.items()).toEqual([{ id: 1, name: 'Item 1' }]);
-    expect(service.isLoading()).toBeFalse();
-    expect(service.errorMessage()).toBeNull();
+    expect(facade.items()).toEqual([{ id: 1, name: 'Item 1' }]);
+    expect(facade.isLoading()).toBeFalse();
+    expect(facade.errorMessage()).toBeNull();
   });
 
   it('uses the cache after the first successful load', () => {
-    service.loadItems();
+    facade.loadItems();
     httpTestingController.expectOne('http://localhost:8080/api/items').flush([]);
 
     let items: unknown;
-    service.loadItems$().subscribe(value => items = value);
+    facade.loadItems$().subscribe(value => items = value);
 
     expect(items).toEqual([]);
     httpTestingController.verify();
   });
 
   it('refreshes items when explicitly requested', () => {
-    service.loadItems();
+    facade.loadItems();
     httpTestingController.expectOne('http://localhost:8080/api/items').flush([]);
 
     let items: unknown;
-    service.refreshItems$().subscribe(value => items = value);
+    facade.refreshItems$().subscribe(value => items = value);
     httpTestingController.expectOne('http://localhost:8080/api/items')
       .flush([{ id: 2, name: 'Updated item' }]);
 
@@ -60,23 +66,23 @@ describe('ItemService', () => {
   });
 
   it('allows retrying after an error', () => {
-    service.loadItems();
+    facade.loadItems();
     httpTestingController.expectOne('http://localhost:8080/api/items')
       .flush('Server error', { status: 500, statusText: 'Server Error' });
 
-    expect(service.errorMessage()).toBeTruthy();
+    expect(facade.errorMessage()).toBeTruthy();
 
-    service.loadItems();
+    facade.loadItems();
     const retryRequest = httpTestingController.expectOne('http://localhost:8080/api/items');
     retryRequest.flush([{ id: 1, name: 'Recovered item' }]);
 
-    expect(service.items()).toEqual([{ id: 1, name: 'Recovered item' }]);
-    expect(service.errorMessage()).toBeNull();
+    expect(facade.items()).toEqual([{ id: 1, name: 'Recovered item' }]);
+    expect(facade.errorMessage()).toBeNull();
   });
 
   it('shares concurrent requests', () => {
-    const firstRequest = service.loadItems$();
-    const secondRequest = service.loadItems$();
+    const firstRequest = facade.loadItems$();
+    const secondRequest = facade.loadItems$();
 
     firstRequest.subscribe();
     secondRequest.subscribe();
@@ -87,12 +93,13 @@ describe('ItemService', () => {
   });
 
   it('invalidates the cache', () => {
-    service.loadItems();
+    facade.loadItems();
     httpTestingController.expectOne('http://localhost:8080/api/items').flush([]);
 
-    service.invalidateCache();
-    service.loadItems();
+    facade.invalidateCache();
+    facade.loadItems();
 
     httpTestingController.expectOne('http://localhost:8080/api/items').flush([]);
+    expect(facade.items()).toEqual([]);
   });
 });

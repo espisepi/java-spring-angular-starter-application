@@ -3,6 +3,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { ItemListComponent } from './item-list.component';
+import { ItemAdapter } from '../../adapters/item.adapter';
+import { ItemRestAdapter } from '../../adapters/item-rest.adapter';
 
 describe('ItemListComponent', () => {
   let component: ItemListComponent;
@@ -12,7 +14,11 @@ describe('ItemListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ItemListComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ItemAdapter, useClass: ItemRestAdapter }
+      ]
     })
       .compileComponents();
 
