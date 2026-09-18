@@ -1,0 +1,60 @@
+<main class="crud-page" aria-labelledby="category-title">
+    <header class="crud-page__header">
+        <div>
+            <p class="crud-page__eyebrow">CATÁLOGO / CLASIFICACIÓN</p>
+            <h1 id="category-title">Categorías</h1>
+            <p class="crud-page__lede">Organiza los items con categorías reutilizables.</p>
+        </div>
+        <a class="crud-page__link" routerLink="/items">Volver a items</a>
+    </header>
+
+    <p class="crud-page__feedback" aria-live="polite">{{ feedback() || error() }}</p>
+
+    <section class="crud-panel" aria-labelledby="category-form-title">
+        <div class="crud-panel__heading">
+            <h2 id="category-form-title">{{ editingId() === null ? 'Nueva categoría' : 'Editar categoría' }}</h2><button
+                class="crud-button crud-button--quiet" type="button" (click)="reset()"
+                [disabled]="editingId() === null">Cancelar</button>
+        </div>
+        <form class="crud-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+            <div class="crud-form__field"><label for="category-name">Nombre</label><input id="category-name"
+                    formControlName="name" maxlength="100" autocomplete="off"
+                    aria-describedby="category-name-help category-name-error"><span id="category-name-help"
+                    class="crud-form__hint">Máximo 100 caracteres.</span>@if (form.controls.name.touched &&
+                form.controls.name.invalid) { <span id="category-name-error" class="crud-form__error"
+                    role="alert">Indica un nombre válido.</span> }</div>
+            <button class="crud-button crud-button--primary" type="submit" [disabled]="form.invalid || isMutating()">{{
+                editingId() === null ? 'Crear categoría' : 'Guardar cambios' }}</button>
+        </form>
+    </section>
+
+    <section class="crud-panel" aria-labelledby="category-list-title">
+        <div class="crud-panel__heading">
+            <h2 id="category-list-title">Categorías guardadas</h2><span class="crud-panel__count">{{ categories().length
+                }}</span>
+        </div>
+        @if (isLoading()) { <p class="crud-page__empty" role="status">Cargando categorías...</p> } @else if
+        (categories().length === 0) { <p class="crud-page__empty">No hay categorías todavía.</p> } @else {
+        <div class="crud-table-wrap">
+            <table class="crud-table">
+                <caption class="sr-only">Listado de categorías</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Identificador</th>
+                        <th scope="col"><span class="sr-only">Acciones</span></th>
+                    </tr>
+                </thead>
+                <tbody>@for (category of categories(); track category.id) { <tr>
+                        <td>{{ category.name }}</td>
+                        <td>#{{ category.id }}</td>
+                        <td class="crud-table__actions"><button class="crud-button crud-button--small" type="button"
+                                (click)="edit(category)">Editar</button><button
+                                class="crud-button crud-button--small crud-button--danger" type="button"
+                                (click)="remove(category)">Eliminar</button></td>
+                    </tr> }</tbody>
+            </table>
+        </div>
+        }
+    </section>
+</main>

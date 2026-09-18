@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 
 import { ItemListComponent } from './item-list.component';
 import { ItemAdapter } from '../../adapters/item.adapter';
@@ -23,6 +24,7 @@ describe('ItemListComponent', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
+        provideRouter([]),
         { provide: ItemAdapter, useClass: ItemRestAdapter },
         { provide: ItemFacade, useExisting: ItemService },
         provideStore({ [itemFeatureKey]: itemReducer }),

@@ -5,7 +5,11 @@
       <h1>Items</h1>
       <p class="lede">Gestiona el catálogo y prueba cada operación contra la API.</p>
     </div>
-    <button class="button button-secondary" type="button" (click)="resetForm()">Nuevo item</button>
+    <nav class="page-header__links" aria-label="Gestión del catálogo">
+      <a routerLink="/categories">Gestionar categorías</a>
+      <a routerLink="/tags">Gestionar tags</a>
+      <button class="button button-secondary" type="button" (click)="resetForm()">Nuevo item</button>
+    </nav>
   </header>
   @if (actionMessage()) { <p class="notice success">{{ actionMessage() }}</p> }
   @if (actionError()) { <p class="notice error">{{ actionError() }}</p> }
