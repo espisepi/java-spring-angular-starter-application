@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../../environments/environment';
 import { Category } from '../models/category';
 import { CategoryDto } from '../models/category-dto';
 import { CategoryAdapter } from './category.adapter';

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../../environments/environment';
 import { Tag } from '../models/tag';
 import { TagDto } from '../models/tag-dto';
 import { TagAdapter } from './tag.adapter';

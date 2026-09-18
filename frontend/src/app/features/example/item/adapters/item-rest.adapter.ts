@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../../environments/environment';
 import { Item, ItemOption } from '../models/Item';
 import { ItemDto } from '../models/item-dto';
 import { ItemAdapter } from './item.adapter';
