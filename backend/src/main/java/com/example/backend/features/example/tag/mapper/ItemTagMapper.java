@@ -1,11 +1,11 @@
-package com.example.backend.features.example.item.mapper;
+package com.example.backend.features.example.tag.mapper;
 
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.example.backend.features.example.item.dto.ItemTagDto;
-import com.example.backend.features.example.item.model.ItemTag;
+import com.example.backend.features.example.tag.dto.ItemTagDto;
+import com.example.backend.features.example.tag.model.ItemTag;
 
 public class ItemTagMapper {
 

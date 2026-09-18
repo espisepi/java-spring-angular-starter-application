@@ -6,13 +6,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.example.backend.features.example.item.model.Item;
-import com.example.backend.features.example.item.model.ItemCategory;
+import com.example.backend.features.example.category.model.ItemCategory;
 import com.example.backend.features.example.item.model.ItemDetail;
 import com.example.backend.features.example.item.model.ItemImage;
-import com.example.backend.features.example.item.model.ItemTag;
-import com.example.backend.features.example.item.repository.ItemCategoryRepository;
+import com.example.backend.features.example.tag.model.ItemTag;
+import com.example.backend.features.example.category.repository.ItemCategoryRepository;
 import com.example.backend.features.example.item.repository.ItemRepository;
-import com.example.backend.features.example.item.repository.ItemTagRepository;
+import com.example.backend.features.example.tag.repository.ItemTagRepository;
 
 @SpringBootApplication
 public class BackendApplication {

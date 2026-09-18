@@ -1,7 +1,7 @@
-package com.example.backend.features.example.item.mapper;
+package com.example.backend.features.example.category.mapper;
 
-import com.example.backend.features.example.item.dto.ItemCategoryDto;
-import com.example.backend.features.example.item.model.ItemCategory;
+import com.example.backend.features.example.category.dto.ItemCategoryDto;
+import com.example.backend.features.example.category.model.ItemCategory;
 
 public class ItemCategoryMapper {
 

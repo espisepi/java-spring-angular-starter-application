@@ -27,8 +27,8 @@ public class LoggingAspect {
         this.objectMapper = objectMapper;
     }
 
-    @Pointcut("execution(public * com.example.backend.features.example.item.web..*(..))"
-            + " || execution(public * com.example.backend.features.example.item.facade..*(..))")
+    @Pointcut("execution(public * com.example.backend.features.example..web..*(..))"
+            + " || execution(public * com.example.backend.features.example..facade..*(..))")
     public void itemCrudOperations() {
     }
 

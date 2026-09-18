@@ -7,17 +7,17 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.backend.features.example.category.model.ItemCategory;
+import com.example.backend.features.example.category.repository.ItemCategoryRepository;
 import com.example.backend.features.example.item.model.Item;
-import com.example.backend.features.example.item.model.ItemCategory;
 import com.example.backend.features.example.item.model.ItemDetail;
-import com.example.backend.features.example.item.model.ItemTag;
 import com.example.backend.features.example.item.dto.ItemRequestDto;
 import com.example.backend.features.example.item.dto.ItemUpdateRequestDto;
 import com.example.backend.features.example.item.exception.ItemNotFoundException;
-import com.example.backend.features.example.item.repository.ItemCategoryRepository;
 import com.example.backend.features.example.item.repository.ItemRepository;
-import com.example.backend.features.example.item.repository.ItemTagRepository;
 import com.example.backend.features.example.item.service.ItemService;
+import com.example.backend.features.example.tag.model.ItemTag;
+import com.example.backend.features.example.tag.repository.ItemTagRepository;
 
 import java.util.HashSet;
 import java.util.Objects;

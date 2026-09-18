@@ -1,4 +1,4 @@
-package com.example.backend.features.example.item.model;
+package com.example.backend.features.example.tag.model;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Table;
+
+import com.example.backend.features.example.item.model.Item;
 
 @Entity
 @Table(name = "tags")

@@ -20,6 +20,9 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.example.backend.features.example.category.model.ItemCategory;
+import com.example.backend.features.example.tag.model.ItemTag;
+
 @Entity
 @Table(name = "items")
 public class Item {
