@@ -1,5 +1,16 @@
 # Java Spring Boot + Angular Starter Application
 
+## TODO:
+
+- Mejorar arquitectura frontend parecida a SAP Spartacus
+
+- Añadir modulo de gestion multimedia subida de archivos y dar url
+(para modificar facilmente por gestion multimedia con aws s3)
+(puedo usar uno u otro facilmente)
+(si s3 no esta disponible, automaticamente se usa el local)
+
+- añadir logger al backend item
+
 ## Overview
 
 This repository serves as a **starter template** for full-stack applications built with **Java Spring Boot (backend)** and **Angular (frontend)**.  
