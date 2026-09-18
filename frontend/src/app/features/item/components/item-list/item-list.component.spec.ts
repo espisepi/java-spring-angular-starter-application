@@ -5,6 +5,12 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { ItemListComponent } from './item-list.component';
 import { ItemAdapter } from '../../adapters/item.adapter';
 import { ItemRestAdapter } from '../../adapters/item-rest.adapter';
+import { ItemFacade } from '../../facade/item.facade';
+import { ItemService } from '../../services/item.service';
+import { provideStore } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { itemFeatureKey, itemReducer } from '../../store/item.reducer';
+import { ItemEffects } from '../../store/item.effects';
 
 describe('ItemListComponent', () => {
   let component: ItemListComponent;
@@ -17,7 +23,10 @@ describe('ItemListComponent', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: ItemAdapter, useClass: ItemRestAdapter }
+        { provide: ItemAdapter, useClass: ItemRestAdapter },
+        { provide: ItemFacade, useExisting: ItemService },
+        provideStore({ [itemFeatureKey]: itemReducer }),
+        provideEffects([ItemEffects])
       ]
     })
       .compileComponents();

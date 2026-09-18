@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ItemFacade } from '../../facade/item.facade';
 import { Item, ItemRequest } from '../../models/Item';
 
@@ -15,11 +16,11 @@ export class ItemListComponent {
   private readonly itemFacade = inject(ItemFacade);
   private readonly formBuilder = inject(FormBuilder);
 
-  readonly items = this.itemFacade.items;
-  readonly isLoading = this.itemFacade.isLoading;
-  readonly errorMessage = this.itemFacade.errorMessage;
-  readonly categories = this.itemFacade.categories;
-  readonly tags = this.itemFacade.tags;
+  readonly items = toSignal(this.itemFacade.items$, { initialValue: [] });
+  readonly isLoading = toSignal(this.itemFacade.isLoading$, { initialValue: false });
+  readonly errorMessage = toSignal(this.itemFacade.errorMessage$, { initialValue: null });
+  readonly categories = toSignal(this.itemFacade.categories$, { initialValue: [] });
+  readonly tags = toSignal(this.itemFacade.tags$, { initialValue: [] });
   readonly editingId = signal<number | null>(null);
   readonly selectedItem = signal<Item | null>(null);
   readonly actionMessage = signal<string | null>(null);
@@ -58,7 +59,6 @@ export class ItemListComponent {
       next: () => {
         this.actionMessage.set(editingId === null ? 'Item creado correctamente.' : 'Item actualizado correctamente.');
         this.resetForm();
-        this.itemFacade.refreshItems();
       },
       error: error => this.actionError.set(this.getErrorMessage(error))
     });
@@ -91,7 +91,6 @@ export class ItemListComponent {
     this.itemFacade.createCategory(name).subscribe({
       next: category => {
         this.newCategoryName.reset();
-        this.itemFacade.loadOptions();
         this.itemForm.controls.categoryId.setValue(category.id);
       },
       error: error => this.actionError.set(this.getErrorMessage(error))
@@ -104,7 +103,6 @@ export class ItemListComponent {
     this.itemFacade.createTag(name).subscribe({
       next: tag => {
         this.newTagName.reset();
-        this.itemFacade.loadOptions();
         this.itemForm.controls.tagIds.setValue([...this.itemForm.controls.tagIds.value, tag.id]);
       },
       error: error => this.actionError.set(this.getErrorMessage(error))
@@ -121,7 +119,6 @@ export class ItemListComponent {
     this.itemFacade.deleteItem(item.id).subscribe({
       next: () => {
         this.actionMessage.set('Item eliminado correctamente.');
-        this.itemFacade.refreshItems();
         if (this.selectedItem()?.id === item.id) {
           this.selectedItem.set(null);
         }
